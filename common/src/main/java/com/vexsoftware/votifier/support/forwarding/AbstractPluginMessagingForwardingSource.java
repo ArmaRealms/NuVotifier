@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -152,6 +153,8 @@ public abstract class AbstractPluginMessagingForwardingSource implements Forward
         if (!serverFilter.isAllowed(server.getName())) return;
 
         final Collection<Vote> cachedVotes = cache.evictPlayer(playerName);
+        ((ArrayList<Vote>) cachedVotes).sort(Comparator.comparingLong(v -> Long.parseLong(v.getTimeStamp())));
+
         dumpVotesToServer(cachedVotes, server, "player '" + playerName + "'", failedVotes -> {
             for (Vote v : failedVotes)
                 cache.addToCachePlayer(v, playerName);
