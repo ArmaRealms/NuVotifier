@@ -31,7 +31,7 @@ public class TestVoteCmd implements SimpleCommand {
         }
 
         plugin.onVoteReceived(v, VotifierSession.ProtocolVersion.TEST, "localhost.test");
-        sender.sendMessage(Component.text("Test vote executed: " + v.toString(), NamedTextColor.GREEN));
+        sender.sendMessage(Component.text("Test vote executed: " + v, NamedTextColor.GREEN));
     }
 
     @Override

@@ -47,7 +47,14 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.Key;
 import java.security.KeyPair;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Plugin(id = "nuvotifier", name = "NuVotifier", version = "@version@", authors = "Ichbinjoe",
@@ -105,7 +112,7 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
         config.getTable("tokens").toMap().forEach((service, key) -> {
             if (key instanceof String) {
                 tokens.put(service, KeyCreator.createKeyFrom((String) key));
-                logger.info("Loaded token for website: " + service);
+                logger.info("Loaded token for website: {}", service);
             }
         });
 
@@ -257,8 +264,7 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
         this.getServer().getCommandManager().register("pnvreload", new NVReloadCmd(this));
         this.getServer().getCommandManager().register("ptestvote", new TestVoteCmd(this));
 
-        if (!loadAndBind())
-            gracefulExit();
+        if (!loadAndBind()) gracefulExit();
     }
 
     @Subscribe
@@ -290,7 +296,7 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
 
             // Initialize the configuration file.
 
-            String cfgStr = new String(IOUtil.readAllBytes(VotifierPlugin.class.getResourceAsStream("/config.toml")), StandardCharsets.UTF_8);
+            String cfgStr = new String(IOUtil.readAllBytes(Objects.requireNonNull(VotifierPlugin.class.getResourceAsStream("/config.toml"))), StandardCharsets.UTF_8);
             String token = TokenUtil.newToken();
             cfgStr = cfgStr.replace("%ip%", server.getBoundAddress().getAddress().getHostAddress());
             cfgStr = cfgStr.replace("%default_token%", token);
@@ -309,7 +315,7 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
             getLogger().info("however, if you want NuVotifier to only listen to one interface for security ");
             getLogger().info("reasons (or you use a shared host), you may change this in the config.toml.");
             getLogger().info("------------------------------------------------------------------------------");
-            getLogger().info("Your default Votifier token is " + token + ".");
+            getLogger().info("Your default Votifier token is {}.", token);
             getLogger().info("You will need to provide this token when you submit your server to a voting");
             getLogger().info("list.");
             getLogger().info("------------------------------------------------------------------------------");
@@ -346,7 +352,7 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
     /**
      * Keys used for websites.
      */
-    private Map<String, Key> tokens = new HashMap<>();
+    private final Map<String, Key> tokens = new HashMap<>();
 
     /**
      * Method used to forward votes to downstream servers
@@ -385,9 +391,9 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
     public void onVoteReceived(final Vote vote, VotifierSession.ProtocolVersion protocolVersion, String remoteAddress) {
         if (debug) {
             if (protocolVersion == VotifierSession.ProtocolVersion.ONE) {
-                logger.info("Got a protocol v1 vote record from " + remoteAddress + " -> " + vote);
+                logger.info("Got a protocol v1 vote record from {} -> {}", remoteAddress, vote);
             } else {
-                logger.info("Got a protocol v2 vote record from " + remoteAddress + " -> " + vote);
+                logger.info("Got a protocol v2 vote record from {} -> {}", remoteAddress, vote);
             }
         }
 
@@ -402,13 +408,12 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
     public void onError(Throwable throwable, boolean alreadyHandledVote, String remoteAddress) {
         if (debug) {
             if (alreadyHandledVote) {
-                logger.warn("Vote processed, however an exception " +
-                        "occurred with a vote from " + remoteAddress, throwable);
+                logger.warn("Vote processed, however an exception occurred with a vote from {}", remoteAddress, throwable);
             } else {
-                logger.warn("Unable to process vote from " + remoteAddress, throwable);
+                logger.warn("Unable to process vote from {}", remoteAddress, throwable);
             }
         } else if (!alreadyHandledVote) {
-            logger.warn("Unable to process vote from " + remoteAddress);
+            logger.warn("Unable to process vote from {}", remoteAddress);
         }
     }
 
