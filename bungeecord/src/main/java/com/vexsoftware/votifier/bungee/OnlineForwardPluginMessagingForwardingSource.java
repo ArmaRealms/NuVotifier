@@ -30,8 +30,7 @@ public final class OnlineForwardPluginMessagingForwardingSource extends Abstract
     @Override
     public void forward(Vote v) {
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(v.getUsername());
-        if (p != null && p.getServer() != null &&
-                serverFilter.isAllowed(p.getServer().getInfo().getName())) {
+        if (p != null && p.getServer() != null && serverFilter.isAllowed(p.getServer().getInfo().getName())) {
             if (forwardSpecific(new BungeeBackendServer(p.getServer().getInfo()), v)) {
                 if (plugin.isDebug()) {
                     plugin.getPluginLogger().info("Successfully forwarded vote " + v + " to server " + p.getServer().getInfo().getName());

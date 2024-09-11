@@ -160,7 +160,7 @@ public class FileVoteCache extends MemoryVoteCache {
 
             }
 
-            // if, during our iteration, we TTL invalidated all of the votes
+            // if, during our iteration, we TTL invalidated all the votes
             if (entry.getValue().isEmpty())
                 entryItr.remove();
             o.add(entry.getKey(), array);

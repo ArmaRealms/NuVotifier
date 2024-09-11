@@ -26,7 +26,6 @@ public class MemoryVoteCache implements VoteCache {
     protected final ReentrantLock cacheLock = new ReentrantLock();
     private final LoggingAdapter l;
     private final long voteTTL;
-    private final ScheduledVotifierTask sweepTask;
 
     public MemoryVoteCache(VotifierPlugin p, long voteTTL) {
         voteCache = new HashMap<>();
@@ -35,7 +34,7 @@ public class MemoryVoteCache implements VoteCache {
         this.voteTTL = voteTTL;
 
         this.l = p.getPluginLogger();
-        this.sweepTask = p.getScheduler().repeatOnPool(this::sweep, 12, 12, TimeUnit.HOURS);
+        p.getScheduler().repeatOnPool(this::sweep, 12, 12, TimeUnit.HOURS);
     }
 
     @Override
