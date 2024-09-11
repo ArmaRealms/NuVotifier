@@ -305,7 +305,7 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
 
             String cfgStr = new String(IOUtil.readAllBytes(Objects.requireNonNull(VotifierPlugin.class.getResourceAsStream("/config.toml"))), StandardCharsets.UTF_8);
             String token = TokenUtil.newToken();
-            cfgStr = cfgStr.replace("%ip%", server.getBoundAddress().getAddress().getHostAddress());
+            cfgStr = cfgStr.replace("%ip%", "0.0.0.0"); // TODO: Fix
             cfgStr = cfgStr.replace("%default_token%", token);
 
             /*
