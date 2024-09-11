@@ -157,11 +157,15 @@ public abstract class AbstractPluginMessagingForwardingSource implements Forward
         if (!serverFilter.isAllowed(server.getName())) return;
 
         final Collection<Vote> cachedVotes = cache.evictPlayer(playerName);
-        ((ArrayList<Vote>) cachedVotes).sort(Comparator.comparingLong(v -> Long.parseLong(v.getTimeStamp())));
 
-        dumpVotesToServer(cachedVotes, server, "player '" + playerName + "'", failedVotes -> {
-            for (Vote v : failedVotes)
+        List<Vote> voteList = new ArrayList<>(cachedVotes);
+        voteList.sort(Comparator.comparingLong(v -> Long.parseLong(v.getTimeStamp())));
+
+        dumpVotesToServer(voteList, server, "player '" + playerName + "'", failedVotes -> {
+            for (Vote v : failedVotes) {
                 cache.addToCachePlayer(v, playerName);
+            }
         });
     }
+
 }
