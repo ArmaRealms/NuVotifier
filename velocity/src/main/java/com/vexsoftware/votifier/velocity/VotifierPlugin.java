@@ -136,88 +136,95 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
 
         Toml fwdCfg = config.getTable("forwarding");
         String fwdMethod = fwdCfg.getString("method", "none").toLowerCase();
-        if ("none".equals(fwdMethod)) {
-            getLogger().info("Method none selected for vote forwarding: Votes will not be forwarded to backend servers.");
-        } else if ("pluginmessaging".equals(fwdMethod)) {
-            Toml pmCfg = fwdCfg.getTable("pluginMessaging");
-            String channel = pmCfg.getString("channel", "NuVotifier");
-            String cacheMethod = pmCfg.getString("cache", "file").toLowerCase();
-            VoteCache voteCache = null;
-            if ("none".equals(cacheMethod)) {
-                getLogger().info("Vote cache none selected for caching: votes that cannot be immediately delivered will be lost.");
-            } else if ("memory".equals(cacheMethod)) {
-                voteCache = new MemoryVoteCache(
-                        this,
-                        fwdCfg.getTable("memory-cache").getLong("cacheTime", -1L));
-                getLogger().info("Using in-memory cache for votes that are not able to be delivered.");
-            } else if ("file".equals(cacheMethod)) {
-                try {
-                    voteCache = new FileVoteCache(
-                            this,
-                            configDir.resolve(fwdCfg.getTable("file-cache").getString("name")).toFile(),
-                            fwdCfg.getTable("file-cache").getLong("cacheTime", -1L));
-                } catch (IOException e) {
-                    getLogger().error("Unload to load file cache. Votes will be lost!", e);
+        switch (fwdMethod) {
+            case "none":
+                getLogger().info("Method none selected for vote forwarding: Votes will not be forwarded to backend servers.");
+                break;
+            case "pluginmessaging":
+                Toml pmCfg = fwdCfg.getTable("pluginMessaging");
+                String channel = pmCfg.getString("channel", "NuVotifier");
+                String cacheMethod = pmCfg.getString("cache", "file").toLowerCase();
+                VoteCache voteCache = null;
+                switch (cacheMethod) {
+                    case "none":
+                        getLogger().info("Vote cache none selected for caching: votes that cannot be immediately delivered will be lost.");
+                        break;
+                    case "memory":
+                        voteCache = new MemoryVoteCache(
+                                this,
+                                fwdCfg.getTable("memory-cache").getLong("cacheTime", -1L));
+                        getLogger().info("Using in-memory cache for votes that are not able to be delivered.");
+                        break;
+                    case "file":
+                        try {
+                            voteCache = new FileVoteCache(
+                                    this,
+                                    configDir.resolve(fwdCfg.getTable("file-cache").getString("name")).toFile(),
+                                    fwdCfg.getTable("file-cache").getLong("cacheTime", -1L));
+                        } catch (IOException e) {
+                            getLogger().error("Unload to load file cache. Votes will be lost!", e);
+                        }
+                        break;
                 }
-            }
-            int dumpRate = pmCfg.getLong("dumpRate", 5L).intValue();
+                int dumpRate = pmCfg.getLong("dumpRate", 5L).intValue();
 
-            ServerFilter filter = new ServerFilter(
-                    pmCfg.getList("excludedServers", Collections.emptyList()),
-                    pmCfg.getBoolean("whitelist", false)
-            );
+                ServerFilter filter = new ServerFilter(
+                        pmCfg.getList("excludedServers", Collections.emptyList()),
+                        pmCfg.getBoolean("whitelist", false)
+                );
 
-            if (!pmCfg.getBoolean("onlySendToJoinedServer")) {
-                try {
-                    forwardingMethod = new PluginMessagingForwardingSource(channel, filter, this, voteCache, dumpRate);
-                    getLogger().info("Forwarding votes over PluginMessaging channel '" + channel + "' for vote forwarding!");
-                } catch (RuntimeException e) {
-                    getLogger().error("NuVotifier could not set up PluginMessaging for vote forwarding!", e);
+                if (!pmCfg.getBoolean("onlySendToJoinedServer")) {
+                    try {
+                        forwardingMethod = new PluginMessagingForwardingSource(channel, filter, this, voteCache, dumpRate);
+                        getLogger().info("Forwarding votes over PluginMessaging channel '{}' for vote forwarding!", channel);
+                    } catch (RuntimeException e) {
+                        getLogger().error("NuVotifier could not set up PluginMessaging for vote forwarding!", e);
+                    }
+                } else {
+                    try {
+                        String fallbackServer = pmCfg.getString("joinedServerFallback", null);
+                        if (fallbackServer != null && fallbackServer.isEmpty()) fallbackServer = null;
+                        forwardingMethod = new OnlineForwardPluginMessagingForwardingSource(channel, filter, this, voteCache, fallbackServer, dumpRate);
+                        getLogger().info("Forwarding votes over PluginMessaging channel '{}' for vote forwarding for online players!", channel);
+                    } catch (RuntimeException e) {
+                        getLogger().error("NuVotifier could not set up PluginMessaging for vote forwarding!", e);
+                    }
                 }
-            } else {
-                try {
-                    String fallbackServer = pmCfg.getString("joinedServerFallback", null);
-                    if (fallbackServer != null && fallbackServer.isEmpty()) fallbackServer = null;
-                    forwardingMethod = new OnlineForwardPluginMessagingForwardingSource(channel, filter, this, voteCache, fallbackServer, dumpRate);
-                    getLogger().info("Forwarding votes over PluginMessaging channel '" + channel + "' for vote forwarding for online players!");
-                } catch (RuntimeException e) {
-                    getLogger().error("NuVotifier could not set up PluginMessaging for vote forwarding!", e);
-                }
-            }
-        } else if ("proxy".equals(fwdMethod)) {
-            Toml serverSection = fwdCfg.getTable("proxy");
-            List<ProxyForwardingVoteSource.BackendServer> serverList = new ArrayList<>();
-            for (String s : serverSection.toMap().keySet()) {
-                Toml section = serverSection.getTable(s);
-                InetAddress address;
-                try {
-                    address = InetAddress.getByName(section.getString("address"));
-                } catch (UnknownHostException e) {
-                    getLogger().info("Address " + section.getString("address") + " couldn't be looked up. Ignoring!");
-                    continue;
+                break;
+            case "proxy":
+                Toml serverSection = fwdCfg.getTable("proxy");
+                List<ProxyForwardingVoteSource.BackendServer> serverList = new ArrayList<>();
+                for (String s : serverSection.toMap().keySet()) {
+                    Toml section = serverSection.getTable(s);
+                    InetAddress address;
+                    try {
+                        address = InetAddress.getByName(section.getString("address"));
+                    } catch (UnknownHostException e) {
+                        getLogger().info("Address {} couldn't be looked up. Ignoring!", section.getString("address"));
+                        continue;
+                    }
+
+                    Key token = null;
+                    try {
+                        token = KeyCreator.createKeyFrom(section.getString("token", section.getString("key")));
+                    } catch (IllegalArgumentException e) {
+                        getLogger().error("An exception occurred while attempting to add proxy target '{}' - maybe your token is wrong? Votes will not be forwarded to this server!", s, e);
+                    }
+
+                    if (token != null) {
+                        ProxyForwardingVoteSource.BackendServer server = new ProxyForwardingVoteSource.BackendServer(s,
+                                new InetSocketAddress(address, Math.toIntExact(section.getLong("port"))),
+                                token);
+                        serverList.add(server);
+                    }
                 }
 
-                Key token = null;
-                try {
-                    token = KeyCreator.createKeyFrom(section.getString("token", section.getString("key")));
-                } catch (IllegalArgumentException e) {
-                    getLogger().error(
-                            "An exception occurred while attempting to add proxy target '" + s + "' - maybe your token is wrong? " +
-                                    "Votes will not be forwarded to this server!", e);
-                }
-
-                if (token != null) {
-                    ProxyForwardingVoteSource.BackendServer server = new ProxyForwardingVoteSource.BackendServer(s,
-                            new InetSocketAddress(address, Math.toIntExact(section.getLong("port"))),
-                            token);
-                    serverList.add(server);
-                }
-            }
-
-            forwardingMethod = bootstrap.createForwardingSource(serverList, null);
-            getLogger().info("Forwarding votes from this NuVotifier instance to another NuVotifier server.");
-        } else {
-            getLogger().error("No vote forwarding method '" + fwdMethod + "' known. Defaulting to noop implementation.");
+                forwardingMethod = bootstrap.createForwardingSource(serverList, null);
+                getLogger().info("Forwarding votes from this NuVotifier instance to another NuVotifier server.");
+                break;
+            default:
+                getLogger().error("No vote forwarding method '{}' known. Defaulting to noop implementation.", fwdMethod);
+                break;
         }
 
         return true;
