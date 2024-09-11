@@ -12,14 +12,14 @@ import net.md_5.bungee.api.plugin.Command;
 
 public class TestVoteCmd extends Command {
 
-    private final NuVotifier plugin;
-
     private static final BaseComponent permission = new TextComponent("You do not have permission to do this!");
     private static final BaseComponent usage = new TextComponent("Usage hint: /ptestvote [username] [serviceName=?] [username=?] [address=?] [localTimestamp=?] [timestamp=?]");
 
     static {
         usage.setColor(ChatColor.GRAY);
     }
+
+    private final NuVotifier plugin;
 
     public TestVoteCmd(NuVotifier plugin) {
         super("ptestvote", "nuvotifier.testvote");

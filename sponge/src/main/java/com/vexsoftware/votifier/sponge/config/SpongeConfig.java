@@ -22,7 +22,7 @@ public class SpongeConfig {
             "This is useful when initially setting up NuVotifier to ensure votes are being delivered.")
     public boolean debug = true;
 
-    @Setting( value = "disable-v1-protocol", comment = "Setting this option to true will disable handling of Protocol v1 packets. While the old protocol is not secure, this\n" +
+    @Setting(value = "disable-v1-protocol", comment = "Setting this option to true will disable handling of Protocol v1 packets. While the old protocol is not secure, this\n" +
             "option is currently not recommended as most voting sites only support the old protocol at present. However, if you are\n" +
             "using NuVotifier's proxy forwarding mechanism, enabling this option will increase your server's security.")
     public boolean disableV1Protocol = false;

@@ -5,12 +5,16 @@ import io.netty.util.AttributeKey;
 
 public class VotifierSession {
     public static final AttributeKey<VotifierSession> KEY = AttributeKey.valueOf("votifier_session");
-    private ProtocolVersion version = ProtocolVersion.UNKNOWN;
     private final String challenge;
+    private ProtocolVersion version = ProtocolVersion.UNKNOWN;
     private boolean hasCompletedVote = false;
 
     public VotifierSession() {
         challenge = TokenUtil.newToken();
+    }
+
+    public ProtocolVersion getVersion() {
+        return version;
     }
 
     public void setVersion(ProtocolVersion version) {
@@ -18,10 +22,6 @@ public class VotifierSession {
             throw new IllegalStateException("Protocol version already switched");
 
         this.version = version;
-    }
-
-    public ProtocolVersion getVersion() {
-        return version;
     }
 
     public String getChallenge() {
@@ -46,6 +46,7 @@ public class VotifierSession {
         TEST("test");
 
         public final String humanReadable;
+
         ProtocolVersion(String hr) {
             this.humanReadable = hr;
         }

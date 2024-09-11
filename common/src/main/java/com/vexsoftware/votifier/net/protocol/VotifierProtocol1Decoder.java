@@ -1,8 +1,8 @@
 package com.vexsoftware.votifier.net.protocol;
 
-import com.vexsoftware.votifier.platform.VotifierPlugin;
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.net.protocol.v1crypto.RSA;
+import com.vexsoftware.votifier.platform.VotifierPlugin;
 import com.vexsoftware.votifier.util.QuietException;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;

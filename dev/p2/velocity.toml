@@ -70,7 +70,7 @@ s2 = "127.0.0.1:25566"
 
 # In what order we should try servers when a player logs in or is kicked from aserver.
 try = [
-  "s1"
+    "s1"
 ]
 
 [forced-hosts]

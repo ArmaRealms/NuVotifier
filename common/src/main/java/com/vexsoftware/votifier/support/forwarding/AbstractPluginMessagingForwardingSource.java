@@ -18,6 +18,11 @@ import java.util.function.Consumer;
 
 public abstract class AbstractPluginMessagingForwardingSource implements ForwardingVoteSource {
 
+    protected final ProxyVotifierPlugin plugin;
+    protected final String channel;
+    protected final VoteCache cache;
+    protected final ServerFilter serverFilter;
+    private final int dumpRate;
     public AbstractPluginMessagingForwardingSource(String channel, ServerFilter serverFilter, ProxyVotifierPlugin plugin, VoteCache cache, int dumpRate) {
         this.channel = channel;
         this.plugin = plugin;
@@ -25,16 +30,9 @@ public abstract class AbstractPluginMessagingForwardingSource implements Forward
         this.serverFilter = serverFilter;
         this.dumpRate = dumpRate;
     }
-
     protected AbstractPluginMessagingForwardingSource(String channel, ProxyVotifierPlugin plugin, VoteCache voteCache, int dumpRate) {
         this(channel, null, plugin, voteCache, dumpRate);
     }
-
-    protected final ProxyVotifierPlugin plugin;
-    protected final String channel;
-    protected final VoteCache cache;
-    protected final ServerFilter serverFilter;
-    private final int dumpRate;
 
     @Override
     public void forward(Vote v) {

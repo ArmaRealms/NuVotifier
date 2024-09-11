@@ -33,12 +33,16 @@ public class VotifierEvent extends Event {
     /**
      * Constructs a vote event that encapsulated the given vote record.
      *
-     * @param vote vote record
+     * @param vote  vote record
      * @param async whether the event will be fired asynchronously
      */
     public VotifierEvent(final Vote vote, final boolean async) {
         super(async);
         this.vote = vote;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     /**
@@ -52,10 +56,6 @@ public class VotifierEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

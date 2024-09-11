@@ -16,7 +16,8 @@ import java.nio.charset.StandardCharsets;
 public class VotifierGreetingHandler extends ChannelInboundHandlerAdapter {
     public static final VotifierGreetingHandler INSTANCE = new VotifierGreetingHandler();
 
-    private VotifierGreetingHandler() {}
+    private VotifierGreetingHandler() {
+    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {

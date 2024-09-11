@@ -6,7 +6,13 @@ import com.vexsoftware.votifier.platform.LoggingAdapter;
 import com.vexsoftware.votifier.platform.VotifierPlugin;
 import com.vexsoftware.votifier.platform.scheduler.ScheduledVotifierTask;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -15,14 +21,11 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class MemoryVoteCache implements VoteCache {
 
-    private final LoggingAdapter l;
-    private final long voteTTL;
-
     protected final Map<String, Collection<VoteWithRecordedTimestamp>> voteCache;
     protected final Map<String, Collection<VoteWithRecordedTimestamp>> playerVoteCache;
-
     protected final ReentrantLock cacheLock = new ReentrantLock();
-
+    private final LoggingAdapter l;
+    private final long voteTTL;
     private final ScheduledVotifierTask sweepTask;
 
     public MemoryVoteCache(VotifierPlugin p, long voteTTL) {

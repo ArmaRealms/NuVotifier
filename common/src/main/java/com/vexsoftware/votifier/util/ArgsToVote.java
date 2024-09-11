@@ -10,7 +10,7 @@ public class ArgsToVote {
 
     private static final Pattern argumentPattern = Pattern.compile("([a-zA-Z]+)=(\\S*)");
 
-    public static Vote parse(String[] arguments)  {
+    public static Vote parse(String[] arguments) {
         return parse(arguments, null);
     }
 

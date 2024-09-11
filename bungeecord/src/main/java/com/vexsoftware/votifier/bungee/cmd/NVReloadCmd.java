@@ -9,8 +9,6 @@ import net.md_5.bungee.api.plugin.Command;
 
 public class NVReloadCmd extends Command {
 
-    private final NuVotifier plugin;
-
     private static final BaseComponent reloadingNuVotifier = new TextComponent("Reloading NuVotifier...");
     private static final BaseComponent nuvotifierHasBeenReloaded = new TextComponent("NuVotifier has been reloaded!");
     private static final BaseComponent problem = new TextComponent("Looks like there was a problem reloading NuVotifier, check the console!");
@@ -22,6 +20,8 @@ public class NVReloadCmd extends Command {
         problem.setColor(ChatColor.DARK_RED);
         permission.setColor(ChatColor.DARK_RED);
     }
+
+    private final NuVotifier plugin;
 
     public NVReloadCmd(NuVotifier plugin) {
         super("pnvreload", "nuvotifier.reload");

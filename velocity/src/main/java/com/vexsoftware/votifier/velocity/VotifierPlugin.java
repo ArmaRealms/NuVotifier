@@ -61,18 +61,40 @@ import java.util.stream.Collectors;
         description = "Safe, smart, and secure Votifier server plugin")
 public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
 
+    /**
+     * Keys used for websites.
+     */
+    private final Map<String, Key> tokens = new HashMap<>();
     @Inject
     public Logger logger;
-    private LoggingAdapter loggingAdapter;
-
     @Inject
     @DataDirectory
     public Path configDir;
 
     @Inject
     public ProxyServer server;
-
+    private LoggingAdapter loggingAdapter;
     private VotifierScheduler scheduler;
+    /**
+     * The current Votifier version.
+     */
+    private String version;
+    /**
+     * The server bootstrap.
+     */
+    private VotifierServerBootstrap bootstrap;
+    /**
+     * The RSA key pair.
+     */
+    private KeyPair keyPair;
+    /**
+     * Debug mode flag
+     */
+    private boolean debug;
+    /**
+     * Method used to forward votes to downstream servers
+     */
+    private ForwardingVoteSource forwardingMethod;
 
     private boolean loadAndBind() {
         // Load configuration.
@@ -335,36 +357,6 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
     public Logger getLogger() {
         return logger;
     }
-
-    /**
-     * The current Votifier version.
-     */
-    private String version;
-
-    /**
-     * The server bootstrap.
-     */
-    private VotifierServerBootstrap bootstrap;
-
-    /**
-     * The RSA key pair.
-     */
-    private KeyPair keyPair;
-
-    /**
-     * Debug mode flag
-     */
-    private boolean debug;
-
-    /**
-     * Keys used for websites.
-     */
-    private final Map<String, Key> tokens = new HashMap<>();
-
-    /**
-     * Method used to forward votes to downstream servers
-     */
-    private ForwardingVoteSource forwardingMethod;
 
     private void gracefulExit() {
         logger.error("Votifier did not initialize properly!");

@@ -40,7 +40,7 @@ Make sure to follow these instructions:
 
 **Platform on which you run NuVotifier**: <!-- Either Bukkit, Sponge, BungeeCord, or Velocity. -->
 
-**Version of NuVotifier**: 
+**Version of NuVotifier**:
 
 ```
 <!--
@@ -57,15 +57,16 @@ Velocity: Use /velocity plugins from in-game and hover over "nuvotifier"
 ```
 
 **Relevant log**: <!-- Paste the log on https://gist.github.com/, replace this with link -->
+
 ### Details
 
-**Description**  
+**Description**
 <!-- Replace this with a brief summary of the bug. -->
 
-**Steps to reproduce**  
+**Steps to reproduce**
 <!-- Replace this with exactly what you did to cause the bug. -->
 
-**Expected behavior**  
+**Expected behavior**
 <!-- Replace this with what you expected to happen. -->
 
 ```
