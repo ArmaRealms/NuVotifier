@@ -131,7 +131,7 @@ public class MemoryVoteCache implements VoteCache {
         return v.recorded + daysAsMillis < System.currentTimeMillis();
     }
 
-    static class VoteWithRecordedTimestamp extends Vote {
+    public static class VoteWithRecordedTimestamp extends Vote {
         private final long recorded;
 
         VoteWithRecordedTimestamp(Vote vote) {
