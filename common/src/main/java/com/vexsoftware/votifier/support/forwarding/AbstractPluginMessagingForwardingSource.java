@@ -96,12 +96,13 @@ public abstract class AbstractPluginMessagingForwardingSource implements Forward
 
     protected void attemptToAddToPlayerCache(Vote v, String player) {
         if (cache != null) {
-            cache.addToCachePlayer(v, player);
-            if (plugin.isDebug())
+            cache.addToCachePlayer(v, player.toLowerCase());
+            if (plugin.isDebug()) {
                 plugin.getPluginLogger().info("Added to forwarding cache: " + v + " -> (player) " + player);
-        } else if (plugin.isDebug())
+            }
+        } else if (plugin.isDebug()) {
             plugin.getPluginLogger().error("Could not immediately send vote to backend, vote lost! " + v + " -> (player) " + player);
-
+        }
     }
 
     private void dumpVotesToServer(Collection<Vote> cachedVotes, BackendServer target, String identifier, Consumer<Collection<Vote>> cb) {
