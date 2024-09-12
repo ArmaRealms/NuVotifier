@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -29,7 +30,7 @@ public class MemoryVoteCache implements VoteCache {
 
     public MemoryVoteCache(VotifierPlugin p, long voteTTL) {
         voteCache = new HashMap<>();
-        playerVoteCache = new HashMap<>();
+        playerVoteCache =  new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         this.voteTTL = voteTTL;
 

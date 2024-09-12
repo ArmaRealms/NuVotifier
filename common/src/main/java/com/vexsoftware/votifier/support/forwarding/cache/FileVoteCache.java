@@ -157,13 +157,14 @@ public class FileVoteCache extends MemoryVoteCache {
                 } else {
                     array.add(vote.serialize());
                 }
-
             }
 
             // if, during our iteration, we TTL invalidated all the votes
-            if (entry.getValue().isEmpty())
+            if (entry.getValue().isEmpty()) {
                 entryItr.remove();
-            o.add(entry.getKey(), array);
+            } else {
+                o.add(entry.getKey(), array);
+            }
         }
         return o;
     }
