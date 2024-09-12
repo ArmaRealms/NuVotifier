@@ -23,6 +23,7 @@ public abstract class AbstractPluginMessagingForwardingSource implements Forward
     protected final VoteCache cache;
     protected final ServerFilter serverFilter;
     private final int dumpRate;
+
     public AbstractPluginMessagingForwardingSource(String channel, ServerFilter serverFilter, ProxyVotifierPlugin plugin, VoteCache cache, int dumpRate) {
         this.channel = channel;
         this.plugin = plugin;
@@ -30,6 +31,7 @@ public abstract class AbstractPluginMessagingForwardingSource implements Forward
         this.serverFilter = serverFilter;
         this.dumpRate = dumpRate;
     }
+
     protected AbstractPluginMessagingForwardingSource(String channel, ProxyVotifierPlugin plugin, VoteCache voteCache, int dumpRate) {
         this(channel, null, plugin, voteCache, dumpRate);
     }
@@ -96,7 +98,7 @@ public abstract class AbstractPluginMessagingForwardingSource implements Forward
 
     protected void attemptToAddToPlayerCache(Vote v, String player) {
         if (cache != null) {
-            cache.addToCachePlayer(v, player.toLowerCase());
+            cache.addToCachePlayer(v, player);
             if (plugin.isDebug()) {
                 plugin.getPluginLogger().info("Added to forwarding cache: " + v + " -> (player) " + player);
             }
