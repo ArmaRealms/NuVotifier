@@ -12,11 +12,11 @@ import java.nio.charset.StandardCharsets;
 
 public abstract class AbstractPluginMessagingForwardingSink implements ForwardingVoteSink {
 
+    private final ForwardedVoteListener listener;
+
     public AbstractPluginMessagingForwardingSink(ForwardedVoteListener listener) {
         this.listener = listener;
     }
-
-    private final ForwardedVoteListener listener;
 
     public void handlePluginMessage(byte[] message) {
         String strMessage = new String(message, StandardCharsets.UTF_8);

@@ -8,11 +8,18 @@ import com.vexsoftware.votifier.platform.VotifierPlugin;
 import com.vexsoftware.votifier.platform.scheduler.ScheduledVotifierTask;
 import com.vexsoftware.votifier.util.GsonInst;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class FileVoteCache extends MemoryVoteCache {
@@ -150,13 +157,14 @@ public class FileVoteCache extends MemoryVoteCache {
                 } else {
                     array.add(vote.serialize());
                 }
-
             }
 
-            // if, during our iteration, we TTL invalidated all of the votes
-            if (entry.getValue().isEmpty())
+            // if, during our iteration, we TTL invalidated all the votes
+            if (entry.getValue().isEmpty()) {
                 entryItr.remove();
-            o.add(entry.getKey(), array);
+            } else {
+                o.add(entry.getKey(), array);
+            }
         }
         return o;
     }

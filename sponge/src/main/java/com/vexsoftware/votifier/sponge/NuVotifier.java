@@ -42,14 +42,28 @@ public class NuVotifier implements VoteHandler, VotifierPlugin, ForwardedVoteLis
 
     @Inject
     public Logger logger;
-
-    private SLF4JLogger loggerAdapter;
-
     @Inject
     @ConfigDir(sharedRoot = false)
     public File configDir;
-
+    private SLF4JLogger loggerAdapter;
     private VotifierScheduler scheduler;
+    /**
+     * The server bootstrap.
+     */
+    private VotifierServerBootstrap bootstrap;
+    /**
+     * The RSA key pair.
+     */
+    private KeyPair keyPair;
+    /**
+     * Debug mode flag
+     */
+    private boolean debug;
+    /**
+     * Keys used for websites.
+     */
+    private Map<String, Key> tokens = new HashMap<>();
+    private ForwardingVoteSink forwardingMethod;
 
     private boolean loadAndBind() {
         // Load configuration.
@@ -202,28 +216,6 @@ public class NuVotifier implements VoteHandler, VotifierPlugin, ForwardedVoteLis
     public Logger getLogger() {
         return logger;
     }
-
-    /**
-     * The server bootstrap.
-     */
-    private VotifierServerBootstrap bootstrap;
-
-    /**
-     * The RSA key pair.
-     */
-    private KeyPair keyPair;
-
-    /**
-     * Debug mode flag
-     */
-    private boolean debug;
-
-    /**
-     * Keys used for websites.
-     */
-    private Map<String, Key> tokens = new HashMap<>();
-
-    private ForwardingVoteSink forwardingMethod;
 
     private void gracefulExit() {
         logger.error("Votifier did not initialize properly!");

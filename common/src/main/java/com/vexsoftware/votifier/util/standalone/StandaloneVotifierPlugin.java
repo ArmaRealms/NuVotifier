@@ -36,7 +36,8 @@ public class StandaloneVotifierPlugin implements VotifierPlugin {
     }
 
     public void start() {
-        start(o -> {});
+        start(o -> {
+        });
     }
 
     public void start(Consumer<Throwable> error) {

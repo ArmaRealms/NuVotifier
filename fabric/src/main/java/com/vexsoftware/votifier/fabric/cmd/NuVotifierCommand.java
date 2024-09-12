@@ -28,14 +28,14 @@ public class NuVotifierCommand {
         dispatcher.register(
                 literal("nuvotifier").requires(reloadPerm.or(testVotePerm))
                         .then(
-                        literal("reload").requires(reloadPerm)
-                                .executes(NuVotifierCommand::reload)
-                ).then(
-                        literal("testvote").then(
-                                argument("args", StringArgumentType.greedyString()).requires(testVotePerm)
-                                        .executes(NuVotifierCommand::sendTestVote)
+                                literal("reload").requires(reloadPerm)
+                                        .executes(NuVotifierCommand::reload)
+                        ).then(
+                                literal("testvote").then(
+                                        argument("args", StringArgumentType.greedyString()).requires(testVotePerm)
+                                                .executes(NuVotifierCommand::sendTestVote)
+                                )
                         )
-                )
         );
     }
 

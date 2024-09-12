@@ -35,13 +35,27 @@ import java.util.concurrent.Executors;
 public class NuVotifier implements VoteHandler, VotifierPlugin, ForwardedVoteListener, DedicatedServerModInitializer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger("nuvotifier");
-
-    private SLF4JLogger loggerAdapter;
-
-
+    /**
+     * Keys used for websites.
+     */
+    private final Map<String, Key> tokens = new HashMap<>();
     public File configDir = FabricLoader.getInstance().getConfigDir().toFile();
-
+    private SLF4JLogger loggerAdapter;
     private VotifierScheduler scheduler;
+    /**
+     * The server bootstrap.
+     */
+    private VotifierServerBootstrap bootstrap;
+    /**
+     * The RSA key pair.
+     */
+    private KeyPair keyPair;
+    /**
+     * Debug mode flag
+     */
+    private boolean debug;
+    private ForwardingVoteSink forwardingMethod;
+    private MinecraftServer server;
 
     private boolean loadAndBind() {
         // Load configuration.
@@ -154,30 +168,6 @@ public class NuVotifier implements VoteHandler, VotifierPlugin, ForwardedVoteLis
             return false;
         }
     }
-
-    /**
-     * The server bootstrap.
-     */
-    private VotifierServerBootstrap bootstrap;
-
-    /**
-     * The RSA key pair.
-     */
-    private KeyPair keyPair;
-
-    /**
-     * Debug mode flag
-     */
-    private boolean debug;
-
-    /**
-     * Keys used for websites.
-     */
-    private final Map<String, Key> tokens = new HashMap<>();
-
-    private ForwardingVoteSink forwardingMethod;
-
-    private MinecraftServer server;
 
     @Override
     public void onInitializeServer() {

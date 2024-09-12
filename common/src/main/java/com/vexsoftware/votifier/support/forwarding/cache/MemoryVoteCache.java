@@ -6,7 +6,14 @@ import com.vexsoftware.votifier.platform.LoggingAdapter;
 import com.vexsoftware.votifier.platform.VotifierPlugin;
 import com.vexsoftware.votifier.platform.scheduler.ScheduledVotifierTask;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -15,24 +22,20 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class MemoryVoteCache implements VoteCache {
 
+    protected final Map<String, Collection<VoteWithRecordedTimestamp>> voteCache;
+    protected final Map<String, Collection<VoteWithRecordedTimestamp>> playerVoteCache;
+    protected final ReentrantLock cacheLock = new ReentrantLock();
     private final LoggingAdapter l;
     private final long voteTTL;
 
-    protected final Map<String, Collection<VoteWithRecordedTimestamp>> voteCache;
-    protected final Map<String, Collection<VoteWithRecordedTimestamp>> playerVoteCache;
-
-    protected final ReentrantLock cacheLock = new ReentrantLock();
-
-    private final ScheduledVotifierTask sweepTask;
-
     public MemoryVoteCache(VotifierPlugin p, long voteTTL) {
         voteCache = new HashMap<>();
-        playerVoteCache = new HashMap<>();
+        playerVoteCache =  new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         this.voteTTL = voteTTL;
 
         this.l = p.getPluginLogger();
-        this.sweepTask = p.getScheduler().repeatOnPool(this::sweep, 12, 12, TimeUnit.HOURS);
+        p.getScheduler().repeatOnPool(this::sweep, 12, 12, TimeUnit.HOURS);
     }
 
     @Override
@@ -129,7 +132,7 @@ public class MemoryVoteCache implements VoteCache {
         return v.recorded + daysAsMillis < System.currentTimeMillis();
     }
 
-    static class VoteWithRecordedTimestamp extends Vote {
+    public static class VoteWithRecordedTimestamp extends Vote {
         private final long recorded;
 
         VoteWithRecordedTimestamp(Vote vote) {

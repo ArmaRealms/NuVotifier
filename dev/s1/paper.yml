@@ -72,8 +72,8 @@ timings:
   verbose: true
   server-name-privacy: false
   hidden-config-entries:
-  - database
-  - settings.bungeecord-addresses
+    - database
+    - settings.bungeecord-addresses
   history-interval: 300
   history-length: 3600
 world-settings:
@@ -170,21 +170,21 @@ world-settings:
       max-chunk-section-index: 3
       update-radius: 2
       hidden-blocks:
-      - gold_ore
-      - iron_ore
-      - coal_ore
-      - lapis_ore
-      - mossy_cobblestone
-      - obsidian
-      - chest
-      - diamond_ore
-      - redstone_ore
-      - clay
-      - emerald_ore
-      - ender_chest
+        - gold_ore
+        - iron_ore
+        - coal_ore
+        - lapis_ore
+        - mossy_cobblestone
+        - obsidian
+        - chest
+        - diamond_ore
+        - redstone_ore
+        - clay
+        - emerald_ore
+        - ender_chest
       replacement-blocks:
-      - stone
-      - oak_planks
+        - stone
+        - oak_planks
     skip-entity-ticking-in-chunks-scheduled-for-unload: true
     armor-stands-do-collision-entity-lookups: true
     keep-spawn-loaded-range: 8

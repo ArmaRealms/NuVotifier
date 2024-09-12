@@ -2,7 +2,6 @@ package com.vexsoftware.votifier;
 
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.net.VotifierSession;
-import io.netty.channel.Channel;
 
 public interface VoteHandler {
 

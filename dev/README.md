@@ -20,7 +20,7 @@ FYI, this only works in Linux afaik because thats what I do my development on.
 # Ports
 
 | Server | Server Software        | MC Port | Votifier Port |
-| ------ | ---------------------- | ------- | ------------- |
+|--------|------------------------|---------|---------------|
 | p1     | Waterfall/BungeeCord   | 25577   | 8192          |
 | p2     | Velocity               | 25578   | 8193          |
 | s1     | Paper (1.16.1)         | 25565   | 8194          |

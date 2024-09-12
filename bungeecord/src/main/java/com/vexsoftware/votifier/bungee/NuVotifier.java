@@ -1,15 +1,18 @@
 package com.vexsoftware.votifier.bungee;
 
-import com.google.common.collect.ImmutableList;
 import com.vexsoftware.votifier.VoteHandler;
 import com.vexsoftware.votifier.bungee.cmd.NVReloadCmd;
 import com.vexsoftware.votifier.bungee.cmd.TestVoteCmd;
+import com.vexsoftware.votifier.bungee.events.VotifierEvent;
+import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.net.VotifierServerBootstrap;
+import com.vexsoftware.votifier.net.VotifierSession;
+import com.vexsoftware.votifier.net.protocol.v1crypto.RSAIO;
+import com.vexsoftware.votifier.net.protocol.v1crypto.RSAKeygen;
 import com.vexsoftware.votifier.platform.BackendServer;
 import com.vexsoftware.votifier.platform.JavaUtilLogger;
 import com.vexsoftware.votifier.platform.LoggingAdapter;
 import com.vexsoftware.votifier.platform.ProxyVotifierPlugin;
-import com.vexsoftware.votifier.bungee.events.VotifierEvent;
 import com.vexsoftware.votifier.platform.scheduler.VotifierScheduler;
 import com.vexsoftware.votifier.support.forwarding.ForwardingVoteSource;
 import com.vexsoftware.votifier.support.forwarding.ServerFilter;
@@ -17,10 +20,6 @@ import com.vexsoftware.votifier.support.forwarding.cache.FileVoteCache;
 import com.vexsoftware.votifier.support.forwarding.cache.MemoryVoteCache;
 import com.vexsoftware.votifier.support.forwarding.cache.VoteCache;
 import com.vexsoftware.votifier.support.forwarding.proxy.ProxyForwardingVoteSource;
-import com.vexsoftware.votifier.model.Vote;
-import com.vexsoftware.votifier.net.VotifierSession;
-import com.vexsoftware.votifier.net.protocol.v1crypto.RSAIO;
-import com.vexsoftware.votifier.net.protocol.v1crypto.RSAKeygen;
 import com.vexsoftware.votifier.util.IOUtil;
 import com.vexsoftware.votifier.util.KeyCreator;
 import com.vexsoftware.votifier.util.TokenUtil;
@@ -43,7 +42,13 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.Key;
 import java.security.KeyPair;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
@@ -88,8 +93,8 @@ public class NuVotifier extends Plugin implements VoteHandler, ProxyVotifierPlug
         }
 
         // Handle configuration.
-        File config = new File(getDataFolder() , "config.yml");
-        File rsaDirectory = new File(getDataFolder() , "rsa");
+        File config = new File(getDataFolder(), "config.yml");
+        File rsaDirectory = new File(getDataFolder(), "rsa");
         Configuration configuration;
 
         if (!config.exists()) {
@@ -203,7 +208,8 @@ public class NuVotifier extends Plugin implements VoteHandler, ProxyVotifierPlug
         // Must set up server asynchronously due to BungeeCord goofiness.
         FutureTask<?> initTask = new FutureTask<>(Executors.callable(() -> {
             this.bootstrap = new VotifierServerBootstrap(host, port, NuVotifier.this, disablev1);
-            this.bootstrap.start(err -> {});
+            this.bootstrap.start(err -> {
+            });
         }));
         getProxy().getScheduler().runAsync(this, initTask);
         try {

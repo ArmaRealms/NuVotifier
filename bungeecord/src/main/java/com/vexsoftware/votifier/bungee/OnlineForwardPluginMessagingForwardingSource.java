@@ -18,6 +18,8 @@ import net.md_5.bungee.event.EventHandler;
  * @date 12/31/2015
  */
 public final class OnlineForwardPluginMessagingForwardingSource extends AbstractPluginMessagingForwardingSource implements Listener {
+    private final String fallbackServer;
+
     public OnlineForwardPluginMessagingForwardingSource(String channel, NuVotifier nuVotifier, ServerFilter serverFilter,
                                                         VoteCache cache, String fallbackServer, int dumpRate) {
         super(channel, serverFilter, nuVotifier, cache, dumpRate);
@@ -25,13 +27,10 @@ public final class OnlineForwardPluginMessagingForwardingSource extends Abstract
         ProxyServer.getInstance().getPluginManager().registerListener(nuVotifier, this);
     }
 
-    private final String fallbackServer;
-
     @Override
     public void forward(Vote v) {
         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(v.getUsername());
-        if (p != null && p.getServer() != null &&
-                serverFilter.isAllowed(p.getServer().getInfo().getName())) {
+        if (p != null && p.getServer() != null && serverFilter.isAllowed(p.getServer().getInfo().getName())) {
             if (forwardSpecific(new BungeeBackendServer(p.getServer().getInfo()), v)) {
                 if (plugin.isDebug()) {
                     plugin.getPluginLogger().info("Successfully forwarded vote " + v + " to server " + p.getServer().getInfo().getName());

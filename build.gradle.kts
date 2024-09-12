@@ -4,7 +4,8 @@ plugins {
     id("net.kyori.blossom") version "1.2.0" apply false
 }
 
-logger.lifecycle("""
+logger.lifecycle(
+    """
 *******************************************
  You are building NuVotifier!
  If you encounter trouble:
@@ -14,7 +15,8 @@ logger.lifecycle("""
 
  Output files will be in [subproject]/build/libs
 *******************************************
-""")
+"""
+)
 
 
 applyRootArtifactoryConfig()

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 public class SLF4JLogger implements LoggingAdapter {
 
     private final Logger l;
+
     public SLF4JLogger(Logger l) {
         this.l = l;
     }

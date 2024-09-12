@@ -1,7 +1,7 @@
 package com.vexsoftware.votifier.support.forwarding.proxy.client;
 
-import com.vexsoftware.votifier.platform.VotifierPlugin;
 import com.vexsoftware.votifier.model.Vote;
+import com.vexsoftware.votifier.platform.VotifierPlugin;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.CorruptedFrameException;

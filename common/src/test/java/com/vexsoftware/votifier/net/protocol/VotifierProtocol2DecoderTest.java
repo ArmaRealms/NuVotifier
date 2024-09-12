@@ -1,9 +1,9 @@
 package com.vexsoftware.votifier.net.protocol;
 
 import com.google.gson.JsonObject;
-import com.vexsoftware.votifier.platform.VotifierPlugin;
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.net.VotifierSession;
+import com.vexsoftware.votifier.platform.VotifierPlugin;
 import com.vexsoftware.votifier.util.GsonInst;
 import com.vexsoftware.votifier.util.KeyCreator;
 import io.netty.channel.embedded.EmbeddedChannel;
@@ -17,7 +17,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VotifierProtocol2DecoderTest {
     private static final VotifierSession SESSION = new VotifierSession();

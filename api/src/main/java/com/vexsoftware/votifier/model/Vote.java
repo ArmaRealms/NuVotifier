@@ -78,14 +78,6 @@ public class Vote {
                 vote.getAdditionalData() == null ? null : vote.getAdditionalData().clone());
     }
 
-    private static String getTimestamp(JsonElement object) {
-        try {
-            return Long.toString(object.getAsLong());
-        } catch (Exception e) {
-            return object.getAsString();
-        }
-    }
-
     public Vote(JsonObject jsonObject) {
         this(jsonObject.get("serviceName").getAsString(),
                 jsonObject.get("username").getAsString(),
@@ -93,6 +85,14 @@ public class Vote {
                 getTimestamp(jsonObject.get("timestamp")));
         if (jsonObject.has("additionalData"))
             additionalData = Base64.getDecoder().decode(jsonObject.get("additionalData").getAsString());
+    }
+
+    private static String getTimestamp(JsonElement object) {
+        try {
+            return Long.toString(object.getAsLong());
+        } catch (Exception e) {
+            return object.getAsString();
+        }
     }
 
     @Override
@@ -109,6 +109,15 @@ public class Vote {
     }
 
     /**
+     * Gets the serviceName.
+     *
+     * @return The serviceName
+     */
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    /**
      * Sets the serviceName.
      *
      * @param serviceName The new serviceName
@@ -119,12 +128,12 @@ public class Vote {
     }
 
     /**
-     * Gets the serviceName.
+     * Gets the username.
      *
-     * @return The serviceName
+     * @return The username
      */
-    public String getServiceName() {
-        return serviceName;
+    public String getUsername() {
+        return username;
     }
 
     /**
@@ -138,12 +147,12 @@ public class Vote {
     }
 
     /**
-     * Gets the username.
+     * Gets the address.
      *
-     * @return The username
+     * @return The address
      */
-    public String getUsername() {
-        return username;
+    public String getAddress() {
+        return address;
     }
 
     /**
@@ -157,12 +166,12 @@ public class Vote {
     }
 
     /**
-     * Gets the address.
+     * Gets the time stamp.
      *
-     * @return The address
+     * @return The time stamp
      */
-    public String getAddress() {
-        return address;
+    public String getTimeStamp() {
+        return timeStamp;
     }
 
     /**
@@ -173,15 +182,6 @@ public class Vote {
     @Deprecated
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
-    }
-
-    /**
-     * Gets the time stamp.
-     *
-     * @return The time stamp
-     */
-    public String getTimeStamp() {
-        return timeStamp;
     }
 
     /**
