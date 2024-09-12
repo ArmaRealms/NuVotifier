@@ -30,4 +30,7 @@ jobs:
         uses: actions/upload-artifact@v4.4.0
         with:
           name: NuVotifier
-          path: universal/build/libs/*.jar
+          path: |
+            universal/build/libs/*.jar
+            velocity/build/libs/*.jar
+            bukkit/build/libs/*.jar
