@@ -118,30 +118,23 @@ public abstract class AbstractPluginMessagingForwardingSource implements Forward
         }
 
         plugin.getScheduler().delayedOnPool(() -> {
-            int evicted = 0;
-            List<Vote> chunk = new ArrayList<>();
-
             Iterator<Vote> iterator = cachedVotes.iterator();
-            while (iterator.hasNext() && evicted < dumpRate) {
-                chunk.add(iterator.next());
+            if (iterator.hasNext()) {
+                Vote vote = iterator.next();
                 iterator.remove();
-            }
 
-            if (forwardSpecific(target, chunk)) {
-                evicted += chunk.size();
-
-                if (evicted >= dumpRate && !cachedVotes.isEmpty()) {
-                    dumpVotesToServer(cachedVotes, target, identifier, evictedAlready + evicted, cb);
+                if (forwardSpecific(target, vote)) {
+                    logEvictionSuccess(evictedAlready + 1, cachedVotes.size(), identifier);
                 } else {
-                    logEvictionSuccess(evictedAlready + evicted, cachedVotes.size(), identifier);
-                    cb.accept(cachedVotes);
+                    cachedVotes.add(vote);
+                    logEvictionSuccess(evictedAlready, cachedVotes.size(), identifier);
                 }
+
+                dumpVotesToServer(cachedVotes, target, identifier, evictedAlready + 1, cb);
             } else {
-                cachedVotes.addAll(chunk);
-                logEvictionSuccess(evictedAlready, cachedVotes.size(), identifier);
                 cb.accept(cachedVotes);
             }
-        }, evictedAlready == 0 ? 3 : 1, TimeUnit.SECONDS);
+        }, 1, TimeUnit.SECONDS);
     }
 
     private void logEvictionSuccess(int evicted, int remaining, String identifier) {
